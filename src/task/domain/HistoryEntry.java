@@ -8,7 +8,7 @@ public class HistoryEntry {
     String createdBy;
     String action;
 
-    public void HistoryEntry(String actionMade,String by){
+    public HistoryEntry(String actionMade,String by){
         action = actionMade;
         createdBy = by;
         timestamp = LocalDateTime.now();

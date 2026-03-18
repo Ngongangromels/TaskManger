@@ -14,14 +14,14 @@ public class Task {
         Vector<Task> dependencies;
         Vector<HistoryEntry> historyTask;
 
-    public void main(String taskTitle){
-
+    public Task(String taskTitle){
         ID = UUID.randomUUID().toString();
         title = taskTitle;
 
         historyTask = new Vector<>();
         dependencies = new Vector<>();
 
+        historyTask.add(new HistoryEntry("task "+ID+" is created","sys"));
     }
 
     public void addHistoryEntry(HistoryEntry entry){
