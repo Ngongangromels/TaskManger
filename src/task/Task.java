@@ -4,4 +4,6 @@ public class Task {
     private
         PriorityLevel priorityLevel;
         TaskStatus taskStatus;   
+        TaskCategory taskCategory;
+        NotificationType notificationType;
 }
