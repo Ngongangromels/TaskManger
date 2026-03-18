@@ -27,4 +27,13 @@ public class Task {
     public void addHistoryEntry(HistoryEntry entry){
         historyTask.add(entry);
     }
+
+    public void updateState(PriorityLevel priority){
+        priorityLevel = priority;
+    }
+    
+    public boolean moreImportantThan(Task other){
+        if (this.priorityLevel.ordinal() > other.priorityLevel.ordinal()) return true;
+        else return false;
+    } 
 }
