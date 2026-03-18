@@ -21,7 +21,7 @@ public class Task {
         historyTask = new Vector<>();
         dependencies = new Vector<>();
 
-        historyTask.add(new HistoryEntry("task "+ID+" is created","sys"));
+        historyTask.add(new HistoryEntry("task " + ID + " is created ","sys"));
     }
 
     public void addHistoryEntry(HistoryEntry entry){
@@ -35,5 +35,18 @@ public class Task {
     public boolean moreImportantThan(Task other){
         if (this.priorityLevel.ordinal() > other.priorityLevel.ordinal()) return true;
         else return false;
-    } 
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder str = new StringBuilder("[");
+
+        for (int i = 0; i < historyTask.size();i++){
+            HistoryEntry t = historyTask.get(i);
+            str.append("Task { action: ").append(t.getAction()).append(", modified: ").append(t.getTimestamp()).append(" }");
+            if (i<historyTask.size()-1) str.append(", ");
+        }
+        str.append("]");
+        return "Task: " + ID + " with title: " + title+ "\n" + "history: "+ str + " \n";
+    }
 }
