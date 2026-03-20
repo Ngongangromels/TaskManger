@@ -17,7 +17,15 @@ public class TaskManager {
     }
 
     public void deleteTask(User usr, Task task){
-        if (usr.getRole() == Role.Admin)tasks.remove(task.ID);
+        if (usr.getRole() == Role.Admin) tasks.remove(task.ID);
         else throw new RuntimeException("You have no permission to delete tasks!\n");
     }
+
+    public void modifyTaskStatus(User usr,Task task){
+        if (usr.getRole() == Role.Engineer){
+            
+        } else throw new RuntimeException("You have no permission to modify tasks!\n");
+    }
+
+    
 }
