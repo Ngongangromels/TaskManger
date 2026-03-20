@@ -8,8 +8,12 @@ public abstract class User {
     String userID;
     
     public User(String usrName,Role usrRole){
-        name = usrName;
-        role = usrRole; 
-        userID = UUID.randomUUID().toString();
+        this.name = usrName;
+        this.role = usrRole; 
+        this.userID = UUID.randomUUID().toString();
+    }
+
+    public Role getRole(){
+        return this.role;
     }
 }
