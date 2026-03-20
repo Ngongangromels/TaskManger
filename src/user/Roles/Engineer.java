@@ -3,19 +3,18 @@ package user.Roles;
 import user.*;
 import task.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
-class Engineer extends User {
+public class Engineer extends User {
 
-    private List<Task> assignedTasks;
+    private HashMap<String,Task> assignedTasks;
 
     public Engineer(String usrName){
         super(usrName,Role.Engineer);
-        this.assignedTasks = new ArrayList<>();
+        this.assignedTasks = new HashMap<>();
     }
 
-    public List<Task> getTasks(){
+    public HashMap<String,Task> getTasks(){
         return this.assignedTasks;
     }
 }

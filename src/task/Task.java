@@ -7,11 +7,14 @@ public class Task {
         String title;
 
         PriorityLevel priorityLevel;
-        TaskStatus taskStatus;   
+        TaskStatus taskStatus;
+        
         TaskCategory taskCategory;
         NotificationType notificationType;
+
         Vector<Task> dependencies;
         Vector<HistoryEntry> historyTask;
+
     public
         String ID;
     public Task(String taskTitle){
