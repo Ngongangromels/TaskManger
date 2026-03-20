@@ -4,7 +4,6 @@ import java.util.Vector;
 import java.util.UUID;
 public class Task {
     private
-        String ID;
         String title;
 
         PriorityLevel priorityLevel;
@@ -13,7 +12,8 @@ public class Task {
         NotificationType notificationType;
         Vector<Task> dependencies;
         Vector<HistoryEntry> historyTask;
-
+    public
+        String ID;
     public Task(String taskTitle){
         ID = UUID.randomUUID().toString();
         title = taskTitle;
@@ -35,6 +35,10 @@ public class Task {
     public boolean moreImportantThan(Task other){
         if (this.priorityLevel.ordinal() > other.priorityLevel.ordinal()) return true;
         else return false;
+    }
+
+    public void modifyTaskStatus(TaskStatus status){
+        taskStatus = status;
     }
 
     @Override
