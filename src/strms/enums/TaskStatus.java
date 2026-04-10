@@ -1,4 +1,4 @@
-package task.domain;
+package strms.enums;
 
 public enum TaskStatus {
     TODO,
@@ -6,3 +6,5 @@ public enum TaskStatus {
     IN_PROGRESS,
     DONE
 }
+
+
