@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    POM Maven du projet STRMS (Smart Task & Resource Management System)
+    Ce fichier déclare les dépendances : JavaFX (interface graphique) et JUnit 5 (tests).
+    Aucune librairie tierce n'est utilisée pour la logique métier (Java pur uniquement).
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fr.eseo.strms</groupId>
+    <artifactId>strms</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>STRMS - Smart Task and Resource Management System</name>
+    <description>Système pédagogique de gestion de tâches en Java avec JavaFX</description>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <javafx.version>21.0.2</javafx.version>
+        <junit.version>5.10.2</junit.version>
+    </properties>
+
+    <dependencies>
+        <!-- JavaFX : pour l'interface graphique -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+        <!-- JUnit 5 : pour les tests unitaires -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Compilation -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
+            </plugin>
+
+            <!--
+                Plugin JavaFX :
+                  - Goal "javafx:run"   : lance l'application
+                  - Goal "javafx:jlink" : produit une image runtime auto-suffisante
+                                          dans target/strms (mini JRE + classes app)
+
+                Le mainClass est au format MODULE/CLASS car le projet est modulaire
+                (cf. src/main/java/module-info.java).
+            -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <configuration>
+                            <mainClass>fr.eseo.strms/fr.eseo.strms.ui.MainApp</mainClass>
+                            <!-- Configuration jlink : produit un runtime "strms-runtime"
+                                 + un launcher "strms" -->
+                            <launcher>strms</launcher>
+                            <jlinkImageName>strms-runtime</jlinkImageName>
+                            <jlinkZipName>strms-runtime</jlinkZipName>
+                            <noManPages>true</noManPages>
+                            <stripDebug>true</stripDebug>
+                            <noHeaderFiles>true</noHeaderFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Exécution des tests JUnit 5 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <!--
+                        Comme le module main exporte/ouvre seulement certains
+                        packages (cf. module-info.java), on autorise les tests
+                        à accéder à tout via cet argument JVM.
+                    -->
+                    <argLine>
+                        --add-opens fr.eseo.strms/fr.eseo.strms.model=ALL-UNNAMED
+                        --add-opens fr.eseo.strms/fr.eseo.strms.manager=ALL-UNNAMED
+                        --add-opens fr.eseo.strms/fr.eseo.strms.utils=ALL-UNNAMED
+                    </argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

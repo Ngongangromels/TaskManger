@@ -1,0 +1,1303 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+
+\geometry{a4paper, margin=2.5cm}
+
+% --- Palette de couleurs ---
+\definecolor{eseoblue}{RGB}{0, 51, 102}
+\definecolor{moderncyan}{RGB}{41, 128, 185}
+\definecolor{darkgray}{RGB}{44, 62, 80}
+\definecolor{lightgray}{RGB}{245, 247, 250}
+\definecolor{codegray}{rgb}{0.5, 0.5, 0.5}
+\definecolor{codepurple}{rgb}{0.58, 0, 0.82}
+\definecolor{codeblue}{rgb}{0.0, 0.0, 0.8}
+\definecolor{codegreen}{rgb}{0, 0.5, 0}
+\definecolor{accentgreen}{RGB}{39, 174, 96}
+\definecolor{accentred}{RGB}{192, 57, 43}
+
+% --- Style des listings Java ---
+\lstdefinestyle{javastyle}{
+    backgroundcolor=\color{lightgray},
+    commentstyle=\color{codegreen}\itshape,
+    keywordstyle=\color{codeblue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    language=Java,
+    frame=single,
+    rulecolor=\color{black!10}
+}
+
+\lstdefinestyle{plaintext}{
+    backgroundcolor=\color{lightgray},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{black!10}
+}
+
+\lstset{style=javastyle}
+
+% --- En-têtes ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textit{STRMS -- Smart Task \& Resource Management System}}
+\fancyhead[R]{\textit{E3e S6 -- Spring 2026}}
+\fancyfoot[C]{\thepage}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=eseoblue,
+    urlcolor=moderncyan,
+    citecolor=eseoblue
+}
+
+\begin{document}
+
+% ============================================================
+% PAGE DE GARDE
+% ============================================================
+\begin{titlepage}
+    \begin{tikzpicture}[remember picture, overlay]
+        \fill[color=eseoblue] (current picture page.north west) rectangle ([xshift=1.2cm]current picture page.south west);
+        \fill[color=moderncyan] ([xshift=1.2cm]current picture page.north west) rectangle ([xshift=1.35cm]current picture page.south west);
+    \end{tikzpicture}
+
+    \indent
+    \begin{minipage}[t]{0.92\textwidth}
+        \flushleft
+        \vspace{-0.5cm}
+
+        {\scshape\large\color{darkgray} ESEO -- Grande École d'Ingénieurs} \\
+        {\small\color{gray} Département Informatique et Systèmes Embarqués} \\[0.2cm]
+        {\small\color{gray} Année Universitaire 2025 -- 2026}
+
+        \addvspace{4cm}
+
+        {\fontsize{28}{34}\selectfont\bfseries\color{eseoblue} Smart Task \& Resource \\ Management System} \\[0.4cm]
+        {\fontsize{16}{20}\selectfont\itshape\color{moderncyan} STRMS} \\[1.5cm]
+
+        {\large\bfseries\color{darkgray} RAPPORT DE PROJET} \\
+        {\normalsize\color{gray} Programmation Orientée Objet en Java}
+
+        \addvspace{4cm}
+
+        \begin{minipage}[t]{0.5\textwidth}
+            \flushleft
+            {\small\bfseries\color{eseoblue} RÉDIGÉ PAR :}\\[0.2cm]
+            {\large\bfseries\color{darkgray} Romels \textsc{Ngongang}}\\
+            {\large\bfseries\color{darkgray} Daniil \textsc{Vedishchev}}\\
+            {\large\bfseries\color{darkgray} Kylan \textsc{Nom}}\\
+            {\large\bfseries\color{darkgray} Nathan \textsc{Bensignor}}\\[0.4cm]
+            {\small\color{gray} Promotion E3e -- Équipe N\textsuperscript{o} 4}
+        \end{minipage}
+        \hfill
+        \begin{minipage}[t]{0.45\textwidth}
+            \flushright
+            {\small\bfseries\color{eseoblue} PRÉSENTÉ À :}\\[0.2cm]
+            {\large\bfseries\color{darkgray} L'Équipe Pédagogique Java}\\[0.4cm]
+            {\small\bfseries\color{eseoblue} DATE :}\\[0.1cm]
+            {\large\color{darkgray} 4 juin 2026}
+        \end{minipage}
+    \end{minipage}
+\end{titlepage}
+
+\newpage
+\setcounter{page}{1}
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Introduction}
+% ============================================================
+
+\subsection{Contexte du projet}
+Ce rapport documente la conception et l'implémentation de l'application
+\textbf{Smart Task \& Resource Management System (STRMS)}, projet réalisé dans
+le cadre du module de \textit{Programmation Orientée Objet en Java} (E3e S6,
+Spring 2026). Le sujet, défini par l'équipe pédagogique, consiste à concevoir
+un système de gestion de tâches simulant un environnement d'ingénierie, avec
+des contraintes fortes sur l'ordre d'exécution (dépendances), la sécurité
+d'accès (rôles utilisateurs), la traçabilité (historique) et la persistance
+(fichier). Le projet s'inscrit dans le programme du semestre S6, qui vise à
+consolider les acquis de la programmation orientée objet à travers une
+mise en situation réaliste et complète, depuis la conception UML jusqu'au
+déploiement final.
+
+Au-delà de l'application stricte des consignes, le projet a été l'occasion
+de découvrir les outils modernes de l'écosystème Java : le système de
+modules introduit par Java 9 (\textit{Java Platform Module System}), les
+outils de packaging \texttt{jlink} et \texttt{jpackage}, ainsi que le
+\textit{Maven Wrapper} pour reproduire l'environnement de compilation sur
+n'importe quelle machine. Ces choix ont permis de livrer une application
+non seulement fonctionnelle mais également distribuable, prête à être
+testée par les membres du jury sans installation préalable de Maven ou de
+JavaFX.
+
+\subsection{Objectifs pédagogiques}
+Le cahier des charges fixe dix objectifs pédagogiques auxquels le projet
+répond intégralement. Le premier objectif est l'application des quatre
+piliers de la programmation orientée objet : encapsulation, héritage,
+polymorphisme et abstraction. Le deuxième concerne la conception et
+l'interprétation de diagrammes UML, tant de classes que de séquence. Le
+troisième objectif consiste à implémenter des classes abstraites et des
+interfaces. Le quatrième porte sur l'utilisation systématique des
+énumérations à la place de constantes brutes. Le cinquième implique la
+manipulation des collections Java standard, notamment \texttt{ArrayList},
+\texttt{HashMap}, \texttt{HashSet} et \texttt{PriorityQueue}. Le sixième
+demande l'implémentation d'exceptions personnalisées avec une gestion
+appropriée. Le septième porte sur la lecture et l'écriture de données dans
+des fichiers. Le huitième est consacré à la gestion des dépendances entre
+tâches et au maintien d'un historique d'audit. Le neuvième impose
+l'écriture de tests unitaires et d'intégration avec JUnit. Enfin, le
+dixième objectif porte sur l'organisation professionnelle d'un projet Java.
+
+Chacun de ces objectifs sera revisité tout au long du présent rapport, en
+montrant comment les choix d'implémentation y répondent concrètement. La
+table de synthèse présentée en conclusion offre une vision panoramique de
+cette correspondance.
+
+\subsection{Composition de l'équipe et organisation}
+Le projet a été réalisé en équipe de quatre étudiants. Romels Ngongang a
+assuré la coordination, le modèle métier, la persistance fichier ainsi que
+l'industrialisation du livrable (packaging \texttt{.exe} et \textit{Maven
+Wrapper}). Daniil Vedishchev s'est concentré sur le contrôleur
+\texttt{TaskManager} et la hiérarchie des exceptions personnalisées, qui
+constituent le c\oe ur des règles métier. Kylan a développé l'interface
+graphique JavaFX, depuis la conception de la charte graphique jusqu'à
+l'intégration des différentes vues. Nathan Bensignor a rédigé les tests
+JUnit, mis en place la couverture des scénarios obligatoires, et produit
+la documentation technique distribuée avec le code. Le code source est
+versionné sous Git, organisé selon une arborescence Maven standard, et
+chaque commit reflète un incrément fonctionnel identifiable.
+
+\subsection{Plan du document}
+Le rapport est structuré pour suivre la logique de conception d'une
+application orientée objet, de la vue d'ensemble vers les détails
+d'implémentation. La section 2 décrit le système STRMS sous l'angle
+fonctionnel. La section 3 expose l'architecture logicielle et les choix
+d'organisation. Les sections 4, 5 et 6 documentent respectivement la
+hiérarchie des utilisateurs, le modèle de tâche et le contrôleur central.
+Les sections 7 et 8 traitent de la robustesse (exceptions) et de la
+persistance. La section 9 présente l'interface graphique JavaFX, et la
+section 10 la stratégie de validation par les tests JUnit. La section 11
+décrit le packaging et la distribution multi-plateforme. Enfin, la section
+12 dresse le bilan du projet et propose des perspectives d'évolution.
+
+% ============================================================
+\section{Présentation du système STRMS}
+% ============================================================
+
+\subsection{Fonctionnalités principales}
+D'après le cahier des charges (section 3), le système doit permettre la
+création d'utilisateurs avec des rôles spécifiques (Admin, Manager,
+Engineer), ainsi que la création, l'assignation, la mise à jour et la
+suppression de tâches. Il doit également suivre l'avancement des tâches et
+leurs dépendances, maintenir un historique des tâches à des fins d'audit,
+prioriser les tâches et gérer leur ordre d'exécution. Enfin, il doit
+assurer le stockage des données du système dans des fichiers ainsi que la
+génération de rapports et de tableaux de bord.
+
+L'application implémente ces exigences à travers cinq vues principales
+accessibles depuis une barre de navigation latérale. Le tableau de bord
+synthétise des indicateurs clés tels que le nombre de tâches par statut, le
+volume assigné à chaque ingénieur et la liste des tâches terminées. Le
+tableau Kanban présente les tâches dans quatre colonnes correspondant aux
+quatre états possibles, à la manière de l'outil industriel Jira. La vue
+des utilisateurs récapitule la matrice de permissions par rôle. La vue
+d'historique permet de consulter l'audit chronologique des actions
+effectuées sur une tâche donnée. Enfin, la vue de rapports génère un
+résumé textuel de l'état du système et propose des opérations de
+sauvegarde et de chargement vers le format fichier dédié.
+
+\subsection{Les trois rôles utilisateurs}
+Le cahier des charges (section 3.3) définit trois rôles, chacun avec ses
+propres responsabilités, et précise expressément que \textit{« seuls les
+ingénieurs peuvent exécuter des tâches »}. Cette contrainte a guidé la
+conception des permissions et a entraîné l'introduction d'une distinction
+explicite entre l'exécution d'une tâche (au sens du démarrage) et sa
+clôture (au sens de la validation finale).
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{p{2.5cm}p{12cm}}
+\toprule
+\textbf{Rôle} & \textbf{Responsabilités} \\
+\midrule
+\textbf{Admin}     & Tous les droits : créer, supprimer, assigner des tâches via le
+                    \texttt{TaskManager}, et générer des rapports. Il représente
+                    typiquement le chef de projet ou l'administrateur fonctionnel. \\
+\textbf{Manager}   & Assigne les tâches aux ingénieurs, suit l'avancement et clôture
+                    les tâches une fois validées. Génère des rapports. Il représente
+                    le manager opérationnel d'une équipe d'ingénieurs. \\
+\textbf{Engineer}  & Démarre les tâches qui lui sont assignées et met à jour leur
+                    statut. Il est le seul rôle qui peut faire passer une tâche de
+                    \texttt{TODO} à \texttt{IN\_PROGRESS}. En revanche, il ne peut
+                    pas la clôturer lui-même : cette responsabilité est dévolue à un
+                    Admin ou un Manager pour préserver un contrôle hiérarchique. \\
+\bottomrule
+\end{tabular}
+\caption{Responsabilités des trois rôles utilisateurs.}
+\end{table}
+
+Notre interface permet de basculer en temps réel entre ces quatre
+utilisateurs de démonstration, ce qui rend immédiatement visible l'effet
+des permissions sur les actions disponibles. Les boutons inaccessibles
+disparaissent ou apparaissent grisés selon le rôle courant, ce qui
+constitue une démonstration vivante du polymorphisme appliqué au contrôle
+d'accès.
+
+\subsection{Le cycle de vie d'une tâche}
+Une tâche évolue à travers quatre états définis par l'énumération
+\texttt{TaskStatus}. Le cahier des charges (section 4.3.1) impose la
+séquence de transitions \texttt{TODO} $\rightarrow$ \texttt{BLOCKED}
+$\rightarrow$ \texttt{IN\_PROGRESS} $\rightarrow$ \texttt{DONE}.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=3cm, auto, thick,
+        every node/.style={font=\small\sffamily},
+        state/.style={rectangle, rounded corners=4pt, draw=eseoblue, fill=lightgray,
+                      minimum width=2cm, minimum height=0.8cm, align=center}]
+        \node[state] (todo)  {TODO};
+        \node[state, right of=todo] (blocked)  {BLOCKED};
+        \node[state, right of=blocked, xshift=0.5cm] (prog) {IN\_PROGRESS};
+        \node[state, right of=prog, xshift=0.5cm] (done) {DONE};
+        \draw[->] (todo) -- (blocked);
+        \draw[->] (blocked) -- (prog);
+        \draw[->] (prog) -- (done);
+    \end{tikzpicture}
+    \caption{Cycle de vie nominal d'une tâche.}
+\end{figure}
+
+L'état \texttt{TODO} correspond à une tâche fraîchement créée pour laquelle
+le travail n'a pas commencé. Une tâche bascule en \texttt{BLOCKED} dès
+qu'au moins une de ses dépendances n'est pas terminée, ce qui interdit son
+exécution effective. L'état \texttt{IN\_PROGRESS} indique qu'un ingénieur
+travaille actuellement dessus. Enfin, l'état \texttt{DONE} signale une
+tâche achevée. Il s'agit d'un état \textbf{terminal} : aucune transition
+n'en sort, ce qui garantit l'intégrité de l'historique d'exécution. Si une
+correction est nécessaire après clôture, le cahier des charges précise
+qu'une nouvelle tâche doit être créée, ce qui correspond à la pratique
+industrielle d'éviter les régressions silencieuses.
+
+Les transitions ne sont pas libres. La transition \texttt{TODO}
+$\rightarrow$ \texttt{IN\_PROGRESS} ne peut s'effectuer que si toutes les
+dépendances de la tâche sont au statut \texttt{DONE}. La transition
+\texttt{IN\_PROGRESS} $\rightarrow$ \texttt{DONE} est, dans notre
+implémentation, conditionnée à la permission \texttt{canCompleteTask()} de
+l'acteur, ce qui implémente la règle hiérarchique évoquée plus haut.
+
+\subsection{Scénario de démonstration}
+Pour illustrer la dynamique du système, considérons le scénario suivant
+inspiré directement du cahier des charges (section 3.3). Romels, qui
+possède le rôle Admin, crée deux tâches : T1 (« Implémenter la page de
+login ») et T2 (« Créer le schéma de base de données »). Il définit
+ensuite une dépendance entre les deux : T2 dépend de T1. À cet instant,
+T2 bascule automatiquement à l'état \texttt{BLOCKED} car sa dépendance
+n'est pas encore terminée.
+
+Daniil, qui est Manager, assigne T1 à Kylan, ingénieur. Lors de
+l'assignation, T1 passe automatiquement à \texttt{IN\_PROGRESS} car elle
+n'a pas de dépendance. Kylan travaille sur la tâche, puis la signale
+comme prête à être validée. Daniil clôture T1, ce qui la fait passer à
+\texttt{DONE}. Le système détecte alors que T2 n'a plus de dépendance non
+satisfaite et la fait basculer automatiquement de \texttt{BLOCKED} à
+\texttt{TODO}, où elle devient éligible à l'assignation. Toutes ces
+opérations sont enregistrées dans l'historique de chaque tâche, ce qui
+permet à n'importe quel utilisateur de tracer ultérieurement la chaîne
+des décisions et des actions.
+
+% ============================================================
+\section{Architecture du code}
+% ============================================================
+
+\subsection{Structure en packages}
+Le projet est organisé en six packages, chacun avec une responsabilité
+précise. Cette séparation reflète les couches conceptuelles de
+l'application : énumérations, exceptions, modèle, contrôleur, utilitaires
+et interface graphique.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{ll}
+\toprule
+\textbf{Package} & \textbf{Rôle} \\
+\midrule
+\texttt{fr.eseo.strms.enums}      & Les quatre énumérations du système \\
+\texttt{fr.eseo.strms.exceptions} & Les sept exceptions personnalisées \\
+\texttt{fr.eseo.strms.model}      & Modèle objet : User, Task, TaskHistoryEntry \\
+\texttt{fr.eseo.strms.manager}    & Contrôleur central TaskManager \\
+\texttt{fr.eseo.strms.utils}      & Persistance, rapports, notifications, tableau de bord \\
+\texttt{fr.eseo.strms.ui}         & Interface graphique JavaFX \\
+\bottomrule
+\end{tabular}
+\caption{Organisation des packages du projet.}
+\end{table}
+
+Cette ségrégation possède plusieurs vertus. Elle facilite la lecture du
+code en permettant à un nouveau lecteur de localiser rapidement la classe
+recherchée. Elle limite les dépendances cycliques, le modèle ne
+connaissant pas les classes utilitaires et l'interface graphique étant
+isolée du c\oe ur métier. Enfin, elle prépare une éventuelle évolution
+du projet vers une architecture en modules au sens du \textit{Java Module
+System}, ce qui a effectivement été réalisé pour les besoins du packaging.
+
+\subsection{Modularité Java}
+Le projet est déclaré comme un module Java explicite via le fichier
+\texttt{module-info.java} placé à la racine de \texttt{src/main/java}.
+Cette déclaration est indispensable pour pouvoir utiliser les outils
+\texttt{jlink} et \texttt{jpackage} qui n'acceptent que des projets
+modulaires. Elle déclare explicitement les dépendances du module (ici
+\texttt{javafx.controls}, qui inclut transitivement \texttt{javafx.graphics}
+et \texttt{javafx.base}), exporte le package contenant la classe
+\texttt{Application} pour permettre à JavaFX de la charger, et ouvre les
+packages dont les classes sont accédées par réflexion (en l'occurrence
+\texttt{PropertyValueFactory} de \texttt{TableView}).
+
+\subsection{Diagramme de classes}
+Le diagramme statique met en évidence trois ensembles : la hiérarchie
+d'utilisateurs avec ses trois sous-classes, le modèle de tâche avec
+composition des dépendances et de l'historique, et le contrôleur central
+qui orchestre les opérations.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Diagrammedeclass.png}
+    \caption{Diagramme de classes du système STRMS.}
+\end{figure}
+
+\subsection{Diagramme de séquence}
+Le diagramme de séquence ci-dessous illustre l'ajout d'une dépendance et
+la détection préventive de cycle, qui constitue l'interaction la plus
+représentative du rôle central du \texttt{TaskManager}. Aucun composant
+de l'interface graphique ne manipule directement le modèle : toute
+modification passe par ce contrôleur, ce qui matérialise l'unicité de
+l'autorité sur l'état du système.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{Diagrammedeséquence.drawio.png}
+    \caption{Diagramme de séquence : ajout d'une dépendance.}
+\end{figure}
+
+\subsection{Choix de conception transversaux}
+Trois principes ont guidé l'ensemble des choix de conception. Le premier
+est la centralisation des règles métier dans le \texttt{TaskManager}, qui
+applique le patron de conception \textit{Facade} : aucune règle n'est
+dispersée dans l'interface graphique ou dans le modèle. Le deuxième est
+l'immuabilité partout où elle est pertinente, en particulier pour les
+entrées d'historique qui doivent être inaltérables pour des raisons
+d'audit. Le troisième est le polymorphisme à la place des tests sur le
+type concret : le contrôleur ne contient aucun \texttt{instanceof} sur
+les sous-classes de \texttt{User}, ce qui assure une extensibilité
+naturelle (l'ajout d'un quatrième rôle ne nécessiterait aucune
+modification du \texttt{TaskManager}).
+
+% ============================================================
+\section{La hiérarchie des utilisateurs}
+% ============================================================
+
+\subsection{La classe abstraite User}
+Le cahier des charges (section 4.1) demande une classe \texttt{User}
+abstraite avec des méthodes abstraites \texttt{canCreateTask()},
+\texttt{canDeleteTask()}, etc. Cette classe matérialise simultanément
+l'\textbf{abstraction} (on ne peut pas instancier un \texttt{User}
+quelconque, il faut choisir un rôle), l'\textbf{encapsulation} (les
+attributs sont privés et accédés uniquement via les getters et setters),
+et l'\textbf{héritage} (les trois sous-classes étendent \texttt{User}).
+
+\begin{lstlisting}[caption={Extrait de la classe abstraite User}]
+public abstract class User {
+
+    private final String id;
+    private String name;
+    private String email;
+
+    protected User(String id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
+    public abstract String getRole();
+    public abstract boolean canCreateTask();
+    public abstract boolean canDeleteTask();
+    public abstract boolean canAssignTask();
+    public abstract boolean canExecuteTask();
+    public abstract boolean canCompleteTask();
+    public abstract boolean canGenerateReport();
+}
+\end{lstlisting}
+
+Le constructeur est déclaré \texttt{protected} pour interdire toute
+instanciation directe de \texttt{User} : seules les sous-classes peuvent
+en créer. Le champ \texttt{id} est \texttt{final}, ce qui signifie que
+l'identifiant d'un utilisateur est fixé à la création et ne peut plus
+changer pendant la durée de vie de l'objet, ce qui est conforme à la
+sémantique d'un identifiant unique. Les six méthodes abstraites
+définissent le contrat de permissions du système. Chaque sous-classe est
+tenue de répondre à chacune de ces questions, ce qui constitue la base du
+contrôle d'accès basé sur les rôles.
+
+\subsection{Les sous-classes Admin, Manager et Engineer}
+Chaque sous-classe implémente les six méthodes abstraites pour refléter
+le rôle qu'elle représente. C'est un exemple direct de
+\textbf{polymorphisme à liaison dynamique} : le code client appelle
+uniformément \texttt{actor.canCreateTask()} sans connaître le type
+concret de l'acteur, et chaque sous-classe répond pour elle-même au
+moment de l'exécution.
+
+\begin{lstlisting}[caption={Sous-classe Admin}]
+public class Admin extends User {
+    public Admin(String id, String name, String email) {
+        super(id, name, email);
+    }
+    @Override public String  getRole()             { return "Admin"; }
+    @Override public boolean canCreateTask()       { return true; }
+    @Override public boolean canDeleteTask()       { return true; }
+    @Override public boolean canAssignTask()       { return true; }
+    @Override public boolean canExecuteTask()      { return false; }
+    @Override public boolean canCompleteTask()     { return true; }
+    @Override public boolean canGenerateReport()   { return true; }
+}
+\end{lstlisting}
+
+Les classes \texttt{Manager} et \texttt{Engineer} suivent le même schéma
+avec des combinaisons de \texttt{true} et \texttt{false} différentes
+correspondant à leur rôle dans le système. La table suivante synthétise
+cette matrice de permissions.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Permission}            & \textbf{Admin} & \textbf{Manager} & \textbf{Engineer} \\
+\midrule
+\texttt{canCreateTask()}       & \textcolor{accentgreen}{\textbf{Oui}} & \textcolor{accentred}{\textbf{Non}} & \textcolor{accentred}{\textbf{Non}} \\
+\texttt{canDeleteTask()}       & \textcolor{accentgreen}{\textbf{Oui}} & \textcolor{accentred}{\textbf{Non}} & \textcolor{accentred}{\textbf{Non}} \\
+\texttt{canAssignTask()}       & \textcolor{accentgreen}{\textbf{Oui}} & \textcolor{accentgreen}{\textbf{Oui}} & \textcolor{accentred}{\textbf{Non}} \\
+\texttt{canExecuteTask()}      & \textcolor{accentred}{\textbf{Non}}   & \textcolor{accentred}{\textbf{Non}} & \textcolor{accentgreen}{\textbf{Oui}} \\
+\texttt{canCompleteTask()}     & \textcolor{accentgreen}{\textbf{Oui}} & \textcolor{accentgreen}{\textbf{Oui}} & \textcolor{accentred}{\textbf{Non}} \\
+\texttt{canGenerateReport()}   & \textcolor{accentgreen}{\textbf{Oui}} & \textcolor{accentgreen}{\textbf{Oui}} & \textcolor{accentred}{\textbf{Non}} \\
+\bottomrule
+\end{tabular}
+\caption{Matrice RBAC des permissions par rôle.}
+\end{table}
+
+\subsection{Implications de la matrice de permissions}
+Cette matrice traduit une politique de séparation des rôles cohérente
+avec la pratique industrielle. L'Admin concentre les droits de
+configuration du système, ce qui correspond à un super-utilisateur ou à
+un chef de projet. Le Manager partage avec l'Admin les droits
+opérationnels d'assignation et de validation, mais ne peut pas modifier
+la définition même des tâches (création et suppression). L'Engineer est
+volontairement restreint à l'exécution opérationnelle, sans capacité de
+modifier la structure du travail. La séparation entre
+\texttt{canExecuteTask()} (réservé à l'Engineer) et
+\texttt{canCompleteTask()} (réservé à l'Admin et au Manager) introduit
+un point de contrôle hiérarchique : un ingénieur ne peut pas
+auto-valider la fin d'une tâche, ce qui garantit une revue managériale
+systématique. Lorsqu'un Engineer tente néanmoins de clôturer une tâche
+depuis l'interface, le système affiche un message d'alerte explicite
+expliquant la raison du refus et invitant à demander la validation au
+manager.
+
+% ============================================================
+\section{Le modèle de tâche}
+% ============================================================
+
+\subsection{Les attributs de la classe Task}
+Conformément au cahier des charges (section 4.2), la classe \texttt{Task}
+encapsule ses propres données ainsi que les opérations qui agissent sur
+ces données. Elle déclare neuf attributs privés couvrant l'identifiant,
+le titre, la description, la priorité, le statut, la catégorie, la
+deadline, l'ingénieur assigné, ainsi que deux listes : l'une pour les
+dépendances vers d'autres tâches, l'autre pour l'historique des actions.
+
+\begin{lstlisting}[caption={Attributs principaux de Task}]
+public class Task implements Comparable<Task> {
+
+    private final String id;
+    private String title;
+    private String description;
+    private PriorityLevel priority;
+    private TaskStatus status;
+    private TaskCategory category;
+    private LocalDate deadline;
+    private Engineer assignedEngineer;
+
+    private final List<Task> dependencies;
+    private final List<TaskHistoryEntry> history;
+    // ...
+}
+\end{lstlisting}
+
+L'identifiant \texttt{id} est déclaré \texttt{final} pour les mêmes
+raisons que dans la classe \texttt{User} : une tâche conserve son
+identifiant à vie. Le statut initial est systématiquement \texttt{TODO},
+ce qui correspond à l'état d'une tâche fraîchement créée. Les listes
+\texttt{dependencies} et \texttt{history} sont déclarées \texttt{final},
+ce qui signifie que la référence ne peut pas être réassignée, mais leur
+contenu peut évoluer via les méthodes dédiées de la classe. À l'inverse,
+elles ne sont jamais exposées telles quelles à l'extérieur : les
+\texttt{getter} renvoient une vue non modifiable grâce à
+\texttt{Collections.unmodifiableList}, ce qui empêche un code client
+malveillant ou maladroit d'altérer la structure interne.
+
+\subsection{La comparaison par priorité}
+La classe \texttt{Task} implémente l'interface \texttt{Comparable<Task>},
+ce qui autorise son utilisation directe dans une \texttt{PriorityQueue}
+sans nécessiter de \texttt{Comparator} externe. La logique de comparaison
+est centrale pour l'ordonnancement et mérite une attention particulière.
+
+\begin{lstlisting}[caption={Comparaison par priorité}]
+@Override
+public int compareTo(Task other) {
+    int cmp = Integer.compare(other.priority.getWeight(), this.priority.getWeight());
+    if (cmp == 0) {
+        return this.id.compareTo(other.id);
+    }
+    return cmp;
+}
+\end{lstlisting}
+
+La méthode renvoie une valeur négative quand la tâche courante est plus
+prioritaire que l'autre, ce qui place les tâches les plus critiques en
+tête de la file. On notera l'inversion volontaire de l'ordre des
+opérandes dans le \texttt{Integer.compare} : on compare le poids de
+l'autre à celui de la tâche courante, et non l'inverse, ce qui réalise
+le tri par priorité décroissante. En cas d'égalité de poids, on
+départage par ordre lexicographique sur l'identifiant. Cette résolution
+secondaire garantit la \textbf{stabilité} et la \textbf{reproductibilité}
+de l'ordonnancement entre deux exécutions, ce qui est précieux à la fois
+pour la prédictibilité du système et pour la rédaction de tests
+déterministes.
+
+\subsection{La classe TaskHistoryEntry et son immuabilité}
+Le cahier des charges (section 6.2.3) exige que les entrées d'historique
+soient \textbf{immuables} et en lecture seule après création. Cette
+exigence n'est pas anodine : sans immuabilité, un acteur malveillant ou
+un bug pourrait réécrire l'historique a posteriori, ce qui ruinerait la
+valeur d'audit du système.
+
+\begin{lstlisting}[caption={Classe TaskHistoryEntry, totalement immuable}]
+public final class TaskHistoryEntry {
+
+    private final String action;
+    private final String performedBy;
+    private final LocalDateTime timestamp;
+    private final String description;
+
+    public TaskHistoryEntry(String action, String performedBy, String description) {
+        this(action, performedBy, description, LocalDateTime.now());
+    }
+
+    public TaskHistoryEntry(String action, String performedBy,
+                            String description, LocalDateTime timestamp) {
+        this.action = Objects.requireNonNull(action);
+        this.performedBy = performedBy != null ? performedBy : "système";
+        this.description = description != null ? description : "";
+        this.timestamp = Objects.requireNonNull(timestamp);
+    }
+
+    public String getAction()           { return action; }
+    public String getPerformedBy()      { return performedBy; }
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public String getDescription()      { return description; }
+}
+\end{lstlisting}
+
+Notre implémentation combine trois mécanismes complémentaires pour
+garantir l'immuabilité. Premièrement, la classe est déclarée
+\texttt{final}, ce qui interdit toute sous-classe susceptible de
+modifier son comportement. Deuxièmement, l'ensemble des attributs sont
+\texttt{final} et sont donc fixés au moment de la construction sans
+possibilité de modification ultérieure. Troisièmement, la classe
+n'expose aucun \texttt{setter}, ce qui élimine toute voie d'altération
+externe. Une entrée d'historique, une fois inscrite, est ainsi conservée
+telle quelle indéfiniment et peut servir de référence fiable pour un
+audit ultérieur.
+
+% ============================================================
+\section{Le contrôleur central : TaskManager}
+% ============================================================
+
+\subsection{Présentation}
+Le \texttt{TaskManager} est, selon le cahier des charges (section 3.2),
+\textit{« le contrôleur central du système, responsable de toutes les
+opérations sur les tâches et de l'application des règles métier »}. Il
+agit comme un point d'entrée unique : aucune partie de l'application ne
+manipule directement le modèle, tout passe par lui. Cette centralisation
+garantit que les règles d'autorisation, l'intégrité du graphe de
+dépendances et la traçabilité ne peuvent être contournées. Du point de
+vue des patrons de conception, il s'agit d'une application du patron
+\textit{Facade}.
+
+\subsection{Les structures de données internes}
+Les quatre attributs internes reflètent les recommandations du cahier
+des charges (section 5).
+
+\begin{lstlisting}[caption={Attributs internes du TaskManager}]
+public class TaskManager {
+    private final Map<String, Task> tasks;
+    private final Map<String, User> users;
+    private final Set<Task>  inProgressTasks;
+    private final PriorityQueue<Task> readyQueue;
+
+    public TaskManager() {
+        this.tasks            = new HashMap<>();
+        this.users            = new HashMap<>();
+        this.inProgressTasks  = new HashSet<>();
+        this.readyQueue       = new PriorityQueue<>();
+    }
+}
+\end{lstlisting}
+
+Le choix d'une \texttt{HashMap<String, Task>} permet une recherche d'une
+tâche par identifiant en temps constant amorti, ce qui est essentiel
+puisque l'opération de recherche est de loin la plus fréquente dans
+l'application. La \texttt{HashMap<String, User>} joue un rôle analogue
+pour les utilisateurs et permet une vérification instantanée des
+permissions. Le \texttt{HashSet<Task>} suit les tâches actuellement en
+cours d'exécution, sans doublon possible et avec un test d'appartenance
+en temps constant. Enfin, la \texttt{PriorityQueue<Task>} maintient en
+tête la tâche la plus prioritaire pouvant être exécutée, avec un coût
+logarithmique pour les opérations d'insertion et de retrait. Cette
+combinaison équilibre lisibilité, performance et respect des
+recommandations pédagogiques.
+
+\subsection{L'ajout d'une tâche}
+La méthode \texttt{addTask} illustre le schéma général de toutes les
+opérations du \texttt{TaskManager} : vérification des permissions de
+l'acteur, validation des préconditions métier, insertion dans les
+structures de données, puis enregistrement d'une trace dans l'historique.
+
+\begin{lstlisting}[caption={Ajout d'une tâche}]
+public void addTask(Task task, User actor)
+        throws InvalidRoleException, DuplicateTaskException {
+
+    ensurePermission(actor, actor.canCreateTask(), "créer une tâche");
+    if (tasks.containsKey(task.getId())) {
+        throw new DuplicateTaskException(
+            "Une tâche avec l'identifiant '" + task.getId() + "' existe déjà.");
+    }
+    tasks.put(task.getId(), task);
+
+    if (task.areDependenciesCompleted() && task.getStatus() == TaskStatus.TODO) {
+        readyQueue.offer(task);
+    }
+    task.addHistoryEntry(new TaskHistoryEntry(
+            "CREATION", actor.getName(),
+            "Tâche '" + task.getTitle() + "' créée par " + actor.getRole()));
+}
+\end{lstlisting}
+
+La méthode commence par s'assurer que l'utilisateur appelant possède le
+droit de créer une tâche, sinon elle lève une
+\texttt{InvalidRoleException}. Elle vérifie ensuite l'unicité de
+l'identifiant, ce qui aurait déclenché une \texttt{DuplicateTaskException}
+en cas de collision. La tâche est alors insérée dans la \texttt{HashMap}
+principale. Si elle ne possède aucune dépendance, elle rejoint
+immédiatement la file de priorité afin de pouvoir être ordonnancée.
+Enfin, une entrée \texttt{CREATION} est enregistrée dans l'historique de
+la tâche, ce qui assure la traçabilité de l'action.
+
+\subsection{L'assignation d'une tâche}
+L'assignation est réservée aux Admin et Manager. La méthode vérifie cette
+permission, puis contrôle que la cible d'assignation est bien un
+ingénieur. Si toutes les dépendances de la tâche sont satisfaites,
+celle-ci passe directement à l'état \texttt{IN\_PROGRESS} et intègre
+l'ensemble des tâches en cours, sinon elle reste à \texttt{BLOCKED}.
+
+\begin{lstlisting}[caption={Assignation d'une tâche}]
+public void assignTask(String taskId, String engineerId, User actor)
+        throws TaskNotFoundException, InvalidRoleException, InvalidTaskStateException {
+
+    ensurePermission(actor, actor.canAssignTask(), "assigner une tâche");
+    Task task = requireTask(taskId);
+
+    User user = users.get(engineerId);
+    if (!(user instanceof Engineer engineer)) {
+        throw new InvalidRoleException(
+            "L'utilisateur " + engineerId + " n'est pas un ingénieur.");
+    }
+    task.setAssignedEngineer(engineer);
+    task.addHistoryEntry(new TaskHistoryEntry(
+            "ASSIGNMENT", actor.getName(),
+            "Tâche assignée à " + engineer.getName()));
+
+    if (task.areDependenciesCompleted() && task.getStatus() != TaskStatus.DONE) {
+        task.updateStatus(TaskStatus.IN_PROGRESS);
+        readyQueue.remove(task);
+        inProgressTasks.add(task);
+    } else if (task.getStatus() != TaskStatus.DONE) {
+        task.updateStatus(TaskStatus.BLOCKED);
+    }
+}
+\end{lstlisting}
+
+On notera l'usage du \textit{pattern matching} sur \texttt{instanceof}
+introduit par Java 16, qui combine en une seule ligne le test de type et
+la conversion. Si l'utilisateur cible n'est pas un \texttt{Engineer}, une
+\texttt{InvalidRoleException} est levée avec un message explicite.
+
+\subsection{La clôture d'une tâche}
+La méthode \texttt{completeTask} matérialise la règle métier introduite
+selon laquelle seuls les Admin et Manager peuvent clôturer une tâche.
+Elle effectue trois opérations essentielles. D'abord, elle vérifie que
+toutes les dépendances sont satisfaites. Ensuite, elle marque la tâche
+comme terminée et la retire des structures de suivi. Enfin, et c'est
+l'étape la plus intéressante, elle propage l'événement : toutes les
+tâches du système qui dépendaient de celle qui vient d'être clôturée
+sont réévaluées.
+
+\begin{lstlisting}[caption={Clôture d'une tâche avec propagation}]
+public void completeTask(String taskId, User actor)
+        throws TaskNotFoundException, InvalidRoleException,
+               InvalidTaskStateException, DependencyNotCompletedException {
+
+    ensurePermission(actor, actor.canCompleteTask(), "compléter une tâche");
+    Task task = requireTask(taskId);
+
+    if (!task.areDependenciesCompleted()) {
+        throw new DependencyNotCompletedException(
+            "Toutes les dépendances ne sont pas terminées.");
+    }
+    task.markAsDone();
+    inProgressTasks.remove(task);
+    readyQueue.remove(task);
+    task.addHistoryEntry(new TaskHistoryEntry(
+            "STATUS_CHANGE", actor.getName(),
+            "Tâche terminée par " + actor.getRole()));
+
+    // Propagation : toutes les taches qui dependaient de celle-ci
+    for (Task other : tasks.values()) {
+        if (other.getDependencies().contains(task)) {
+            refreshTaskReadiness(other);
+        }
+    }
+}
+\end{lstlisting}
+
+La méthode privée \texttt{refreshTaskReadiness} évalue chaque tâche
+candidate à un déblocage. Si toutes ses dépendances sont désormais à
+\texttt{DONE}, elle bascule de \texttt{BLOCKED} à \texttt{TODO} et
+rejoint la file de priorité. Cette propagation en cascade est ce qui
+permet au système de fonctionner sans intervention manuelle : l'utilisateur
+n'a pas à se demander quelles tâches sont devenues éligibles, le système
+les ramène automatiquement à la surface.
+
+\subsection{La détection de cycles par DFS}
+Le cahier des charges (section 6.1.2) impose explicitement un algorithme
+de parcours de graphe pour détecter les cycles avant tout ajout de
+dépendance. Le risque, sans détection, serait qu'une tâche se trouve
+dans une situation d'interblocage où elle attend la complétion d'une
+tâche qui elle-même l'attend.
+
+Nous avons opté pour un parcours en profondeur (\textit{Depth-First
+Search}) itératif utilisant une pile explicite. Le principe consiste à
+se demander, avant d'ajouter l'arc « \texttt{task} dépend de
+\texttt{dependsOn} », si \texttt{dependsOn} dépend déjà, directement ou
+indirectement, de \texttt{task}. Si c'est le cas, l'ajout créerait un
+cycle. On part donc de \texttt{dependsOn} et on suit ses dépendances en
+remontant le graphe. Une pile explicite simule la récursivité, et un
+\texttt{HashSet} mémorise les n\oe uds déjà visités pour éviter toute
+boucle infinie sur un graphe contenant déjà des partages.
+
+\begin{lstlisting}[caption={Détection de cycle par DFS itératif}]
+public boolean detectCircularDependency(Task task, Task dependsOn) {
+    Set<Task> visited = new HashSet<>();
+    Deque<Task> stack = new ArrayDeque<>();
+    stack.push(dependsOn);
+
+    while (!stack.isEmpty()) {
+        Task current = stack.pop();
+        if (current.equals(task)) {
+            return true;  // cycle detecte
+        }
+        if (visited.add(current)) {
+            for (Task dep : current.getDependencies()) {
+                stack.push(dep);
+            }
+        }
+    }
+    return false;
+}
+\end{lstlisting}
+
+La complexité temporelle est en $O(V + E)$ dans le pire des cas, où $V$
+représente le nombre de tâches et $E$ le nombre de dépendances : on
+parcourt au plus une fois chaque tâche et chaque arc. La complexité
+spatiale est en $O(V)$, induite par l'ensemble \texttt{visited} et la
+pile. Le choix d'une implémentation itérative plutôt que récursive
+évite tout risque de \texttt{StackOverflowError} sur des graphes très
+profonds et offre un contrôle plus fin sur la consommation mémoire.
+
+\subsection{La méthode addDependency et son comportement transactionnel}
+L'ajout d'une dépendance fait appel à la détection de cycle. La méthode
+\texttt{addDependency} effectue toutes les vérifications avant la moindre
+mutation, de sorte qu'en cas de rejet, l'état du système reste
+strictement identique. Cette propriété d'atomicité est essentielle pour
+préserver l'intégrité du graphe en cas d'erreur, et elle correspond à
+l'exigence du cahier des charges (section 6.3) selon laquelle
+\textit{« les dépendances rejetées ne doivent pas altérer l'état
+existant du système »}. Notons aussi qu'en cas de rejet, une trace
+\texttt{DEPENDENCY\_REJECTED} est néanmoins ajoutée à l'historique de la
+tâche cible, ce qui permet d'auditer ultérieurement les tentatives
+infructueuses : la traçabilité prime sur l'absence de mutation
+métier.
+
+% ============================================================
+\section{Les exceptions personnalisées}
+% ============================================================
+
+\subsection{Hiérarchie des exceptions}
+Le cahier des charges (section 8) impose la définition de sept exceptions
+personnalisées. Toutes héritent de \texttt{java.lang.Exception}, ce qui
+les rend \textit{checked} : l'appelant est tenu de les traiter
+explicitement soit par une clause \texttt{throws}, soit par un bloc
+\texttt{try-catch}. Ce choix est délibéré et important pédagogiquement.
+À l'opposé d'une \texttt{RuntimeException} qui peut être ignorée
+silencieusement, une exception \textit{checked} oblige le compilateur à
+vérifier la prise en charge, ce qui empêche tout silence sur un échec
+métier.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lp{9.5cm}}
+\toprule
+\textbf{Exception} & \textbf{Condition de levée} \\
+\midrule
+\texttt{CircularDependencyException}     & Un ajout de dépendance créerait un cycle. \\
+\texttt{DependencyNotCompletedException} & Démarrage ou clôture avec dépendances non terminées. \\
+\texttt{TaskNotFoundException}           & Identifiant de tâche inconnu. \\
+\texttt{InvalidRoleException}            & Action interdite par le rôle de l'utilisateur. \\
+\texttt{FilePersistenceException}        & Erreur d'I/O lors de la sauvegarde ou du chargement. \\
+\texttt{DuplicateTaskException}          & Création d'une tâche avec un identifiant existant. \\
+\texttt{InvalidTaskStateException}       & Transition d'état invalide (ex. DONE vers IN\_PROGRESS). \\
+\bottomrule
+\end{tabular}
+\caption{Les sept exceptions personnalisées du système.}
+\end{table}
+
+\subsection{Structure type d'une exception}
+Toutes les exceptions personnalisées suivent une structure standard,
+dont \texttt{CircularDependencyException} constitue un exemple
+représentatif. Elles déclarent typiquement deux constructeurs : l'un
+prenant uniquement un message, l'autre prenant message et cause pour
+permettre l'enchaînement (\textit{exception chaining}) lorsque
+l'exception métier enveloppe une exception technique sous-jacente.
+
+\begin{lstlisting}[caption={Exemple : CircularDependencyException}]
+public class CircularDependencyException extends Exception {
+    public CircularDependencyException(String message) {
+        super(message);
+    }
+    public CircularDependencyException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
+\end{lstlisting}
+
+\subsection{Stratégie de remontée}
+La stratégie adoptée consiste à laisser remonter les exceptions jusqu'à
+la couche d'interface graphique, qui les capture et les transforme en
+boîtes de dialogue d'erreur compréhensibles pour l'utilisateur final.
+Cette approche garde la couche métier exempte de toute logique
+d'affichage tout en assurant à l'utilisateur un retour clair en cas de
+problème. Les exceptions \texttt{FilePersistenceException} en
+particulier enveloppent les \texttt{IOException} sous-jacentes pour
+ajouter un contexte métier, suivant le principe d'\textit{exception
+translation}.
+
+% ============================================================
+\section{Persistance fichier}
+% ============================================================
+
+\subsection{Choix du format texte}
+Plutôt que la sérialisation native de Java (\texttt{Serializable}), nous
+avons opté pour un format texte personnalisé nommé \texttt{.strms}. Trois
+raisons ont motivé ce choix. La première est la \textbf{lisibilité
+humaine} : un fichier \texttt{.strms} peut être ouvert dans n'importe
+quel éditeur pour vérification ou correction manuelle, ce qui est
+précieux en phase de développement et de débogage. La deuxième est
+l'\textbf{indépendance vis-à-vis de la JVM} : la sérialisation Java est
+sensible aux changements de version et de classpath, alors qu'un fichier
+texte est portable entre toutes les versions. La troisième est la
+\textbf{robustesse à l'évolution} : si la structure d'une classe change,
+le format binaire devient illisible, alors que le format texte peut être
+migré ou tolérer des champs additionnels avec un peu de soin.
+
+\subsection{Structure du format}
+Chaque ligne du fichier est typée par un préfixe explicite. Le préfixe
+\texttt{TASK} introduit la définition complète d'une tâche, suivi de ses
+champs séparés par des points-virgules. Le préfixe \texttt{DEP} déclare
+une dépendance entre deux tâches identifiées par leurs identifiants. Le
+préfixe \texttt{HIST} enregistre une entrée d'historique. Le séparateur
+\texttt{;} est échappé par \texttt{\textbackslash;} dans tout champ
+contenant ce caractère, suivant un mécanisme classique d'échappement
+avec \textit{placeholder} interne. Cette structure simple permet au
+lecteur de comprendre instantanément un fichier de persistance.
+
+\subsection{Algorithme de chargement avec traitement différé}
+Lors d'une sauvegarde, l'ordre des lignes dans le fichier n'est pas
+garanti car la méthode \texttt{HashMap.values()} ne préserve aucun ordre
+particulier. Il est donc tout à fait possible qu'une ligne
+\texttt{DEP;T-2;T-1} apparaisse dans le fichier avant la définition de
+\texttt{TASK;T-1;...}. Un chargement naïf au fil de l'eau perdrait cette
+dépendance puisque \texttt{T-1} ne serait pas encore présente dans la
+\texttt{HashMap} au moment où l'on tenterait de la relier à \texttt{T-2}.
+
+Notre solution consiste à effectuer une seule lecture du fichier en
+chargeant immédiatement les lignes \texttt{TASK}, mais en
+\textbf{accumulant les lignes \texttt{DEP} et \texttt{HIST} dans une
+liste différée}. Une fois toutes les tâches chargées, on traite ces
+lignes différées en parcourant la liste, et toutes les références sont
+alors garanties d'être résolues correctement.
+
+\begin{lstlisting}[caption={Chargement en une lecture avec traitement différé}]
+Map<String, Task> loaded = new HashMap<>();
+List<String[]> deferredLines = new ArrayList<>();
+
+try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+    String line;
+    while ((line = reader.readLine()) != null) {
+        if (line.isBlank()) continue;
+        String[] parts = split(line);
+        if ("TASK".equals(parts[0])) {
+            loaded.put(parts[1], deserializeTask(parts, manager));
+        } else {
+            deferredLines.add(parts);
+        }
+    }
+}
+
+for (String[] parts : deferredLines) {
+    switch (parts[0]) {
+        case "DEP"  -> resolveDependency(loaded, parts);
+        case "HIST" -> resolveHistoryEntry(loaded, parts);
+    }
+}
+\end{lstlisting}
+
+Cet algorithme est à la fois efficace (lecture séquentielle unique) et
+robuste (immunisé contre les permutations de l'ordre des lignes). Il
+illustre comment un problème de modélisation peut se traduire en
+contraintes algorithmiques subtiles qui ne sont visibles qu'à
+l'exécution sur des cas particuliers.
+
+% ============================================================
+\section{Interface graphique JavaFX}
+% ============================================================
+
+\subsection{Architecture des vues}
+L'interface graphique est entièrement écrite en Java, sans recours à
+FXML, ce qui permet un contrôle programmatique total et une lecture
+linéaire du code d'interface. La fenêtre principale est organisée autour
+d'une mise en page de type \texttt{BorderPane} composée de trois zones.
+La zone supérieure contient une barre titre avec le nom de l'application
+et un sélecteur d'utilisateur courant. La zone latérale gauche contient
+une barre de navigation vers les cinq vues principales. La zone centrale
+accueille la vue actuellement sélectionnée.
+
+Les cinq vues principales sont les suivantes. La vue \texttt{Dashboard}
+présente des cartes d'indicateurs colorées avec le nombre de tâches dans
+chaque état, le détail des assignations par ingénieur et la liste des
+tâches terminées. La vue \texttt{Kanban} affiche les tâches sous forme
+de cartes dans quatre colonnes représentant les quatre états, à la
+manière de l'outil industriel Jira. La vue \texttt{Users} synthétise les
+permissions de chaque utilisateur dans un \texttt{TableView}. La vue
+\texttt{History} affiche l'audit chronologique d'une tâche sélectionnée
+via une \texttt{ComboBox}. La vue \texttt{Reports} génère un résumé
+textuel et propose des actions de persistance fichier.
+
+\subsection{Charte graphique}
+La conception visuelle s'inspire d'applications industrielles modernes,
+avec une dominante bleue (\texttt{\#0052CC}) et blanche, une barre
+latérale sombre pour la navigation, des cartes blanches avec ombres
+portées pour le contenu, et des badges colorés pour les niveaux de
+priorité. L'ensemble est défini dans un fichier CSS unique
+(\texttt{src/main/resources/css/style.css}), ce qui sépare proprement la
+présentation de la logique.
+
+\subsection{Adaptation dynamique aux permissions}
+Le contenu de chaque vue s'adapte au rôle de l'utilisateur courant. Sur
+le tableau Kanban, les boutons d'action sur chaque carte (Démarrer,
+Terminer, Assigner, +Dépendance, Supprimer) apparaissent ou disparaissent
+selon les permissions. Cette adaptation s'effectue uniquement à travers
+les méthodes polymorphes \texttt{actor.canCreateTask()},
+\texttt{actor.canCompleteTask()}, etc. Aucun test conditionnel sur le
+type concret de l'acteur n'est jamais effectué, ce qui assure une
+extensibilité naturelle.
+
+Le cas particulier du bouton \textit{Terminer} pour un Engineer mérite
+une mention. Plutôt que de simplement masquer le bouton, l'interface le
+conserve visible mais grisé (style CSS \texttt{disabled}). Lorsque
+l'Engineer clique dessus, une boîte de dialogue d'avertissement explique
+que cette action est réservée aux Admin et Manager, et invite à demander
+la validation au manager. Ce choix de conception privilégie la
+\textbf{pédagogie} (l'utilisateur comprend pourquoi l'action est
+indisponible) sur le simple masquage.
+
+% ============================================================
+\section{Tests automatisés JUnit}
+% ============================================================
+
+\subsection{Stratégie de test}
+Le cahier des charges (section 7) impose une suite de tests isolés,
+répétables et automatisés, validant à la fois les scénarios nominaux et
+les cas d'erreur. Notre approche consiste à couvrir intégralement les
+règles métier critiques du \texttt{TaskManager}, en s'appuyant sur deux
+classes de test complémentaires.
+
+\subsection{Structure}
+La classe \texttt{TaskManagerTest} contient vingt-sept tests portant sur
+les permissions par rôle, le cycle de vie complet des tâches, l'ajout et
+le retrait de dépendances, la détection de cycles directs et indirects,
+et le respect des transitions d'état. La classe
+\texttt{FilePersistenceTest} contient deux tests d'intégration qui
+valident le cycle complet de sauvegarde et de chargement, en vérifiant
+que les dépendances et l'historique sont préservés à l'identique. Au
+total, le projet contient \textbf{vingt-neuf tests}.
+
+Chaque test est isolé via l'annotation \texttt{@BeforeEach} qui recrée
+un \texttt{TaskManager} neuf, un Admin, un Manager et un Engineer. Cette
+isolation garantit l'absence d'effet de bord entre tests, ce qui est
+essentiel pour la fiabilité de la suite et permet l'exécution dans
+n'importe quel ordre, conformément à l'exigence du cahier des charges
+(section 7.3).
+
+\subsection{Scénarios obligatoires couverts}
+Le cahier des charges (section 7.2) liste cinq scénarios obligatoires.
+Chacun est validé par un test dédié au nom explicite.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lp{6.5cm}}
+\toprule
+\textbf{Scénario obligatoire} & \textbf{Test JUnit correspondant} \\
+\midrule
+Ajout d'une dépendance valide        & \texttt{add\_valid\_dependency\_succeeds} \\
+Rejet d'une dépendance circulaire    & \texttt{direct\_circular\_dependency\_is\_rejected} \\
+Rejet circulaire indirect            & \texttt{indirect\_circular\_dependency\_is\_rejected} \\
+Intégrité du graphe après rejet     & \texttt{graph\_integrity\_preserved\_after\_rejection} \\
+Suppression correcte de dépendance  & \texttt{remove\_dependency\_works} \\
+\bottomrule
+\end{tabular}
+\caption{Couverture des scénarios obligatoires par les tests JUnit.}
+\end{table}
+
+\subsection{Exemple représentatif}
+Le test le plus représentatif est celui qui valide le rejet d'un cycle
+indirect. Il prépare un graphe acyclique \texttt{C $\to$ B $\to$ A},
+puis tente d'ajouter l'arc \texttt{A $\to$ C} qui créerait un cycle
+indirect.
+
+\begin{lstlisting}[caption={Test du rejet d'une dépendance circulaire indirecte}]
+@Test
+@DisplayName("Rejet d'une dépendance circulaire indirecte")
+void indirect_circular_dependency_is_rejected() throws Exception {
+    manager.addTask(makeTask("A", PriorityLevel.HIGH), admin);
+    manager.addTask(makeTask("B", PriorityLevel.HIGH), admin);
+    manager.addTask(makeTask("C", PriorityLevel.HIGH), admin);
+
+    manager.addDependency("B", "A", admin); // B -> A
+    manager.addDependency("C", "B", admin); // C -> B
+
+    // Tentative : A -> C  produirait  A -> C -> B -> A (cycle)
+    assertThrows(CircularDependencyException.class,
+            () -> manager.addDependency("A", "C", admin));
+}
+\end{lstlisting}
+
+La méthode \texttt{assertThrows} de JUnit vérifie qu'une
+\texttt{CircularDependencyException} est bien levée par l'opération
+d'ajout, conformément au comportement attendu. L'utilisation de
+l'annotation \texttt{@DisplayName} fournit un libellé lisible dans les
+rapports d'exécution, ce qui facilite l'analyse en cas d'échec.
+
+\subsection{Résultats et couverture}
+L'ensemble des vingt-neuf tests s'exécute en moins d'une seconde et
+passe sans aucune erreur sur les machines des quatre membres de
+l'équipe, ce qui valide à la fois la robustesse du code et la
+reproductibilité de l'environnement de build via le \textit{Maven Wrapper}.
+Les tests couvrent toutes les exceptions personnalisées : chacune est
+levée et capturée au moins une fois dans la suite, ce qui garantit que
+les chemins d'erreur ne sont pas du code mort.
+
+% ============================================================
+\section{Packaging et distribution}
+% ============================================================
+
+\subsection{Enjeu}
+Au-delà de la mise au point du code, nous avons souhaité produire une
+distribution facile à tester pour le jury et nos camarades. L'expérience
+courante est qu'une application Java « simple à lancer » se transforme
+souvent en cauchemar quand l'utilisateur ne dispose pas du bon JDK ou
+n'a pas configuré JavaFX. Pour anticiper ce problème, nous avons mis en
+place deux modes de distribution complémentaires.
+
+\subsection{Mode universel : Maven Wrapper}
+Le projet embarque le \textit{Maven Wrapper} (\texttt{mvnw},
+\texttt{mvnw.cmd}, dossier \texttt{.mvn/wrapper}). Ces scripts
+téléchargent automatiquement la version exacte de Maven attendue par le
+projet (3.9.9) au premier lancement, ce qui évite à l'utilisateur
+d'installer Maven manuellement. Le seul prérequis devient un JDK 17 ou
+supérieur. Maven se charge ensuite du téléchargement des dépendances
+JavaFX et de la sélection de la variante adaptée à l'architecture (x64,
+ARM Apple Silicon, etc.). La commande à exécuter est minimale :
+\texttt{mvnw javafx:run} sur Windows ou \texttt{./mvnw javafx:run} sur
+macOS et Linux.
+
+\subsection{Mode autonome : installeur Windows via jpackage}
+Pour les utilisateurs ne souhaitant rien installer du tout, nous avons
+produit un installeur Windows à l'aide des outils \texttt{jlink} et
+\texttt{jpackage}, tous deux inclus dans le JDK 17 depuis Java 14.
+L'outil \texttt{jlink} produit une image runtime contenant uniquement
+les modules Java strictement nécessaires à l'application :
+\texttt{java.base}, \texttt{java.desktop}, \texttt{javafx.controls},
+\textit{etc}. L'outil \texttt{jpackage} encapsule ensuite cette image,
+les classes de l'application et un launcher \texttt{STRMS.exe} dans un
+dossier autonome de 91 Mo environ.
+
+Sur Windows 11, la fonctionnalité \textit{Smart App Control} peut bloquer
+les binaires \texttt{.exe} non signés numériquement. Pour contourner
+cette limitation sans recourir à un certificat de signature payant, le
+script de packaging produit en parallèle un launcher \texttt{STRMS.bat}
+qui invoque directement l'exécutable Java embarqué dans le dossier
+\texttt{runtime}. Le \texttt{.bat} n'étant pas filtré par Smart App
+Control, il fonctionne sans avertissement sur toutes les machines
+Windows.
+
+\subsection{Bénéfices observés}
+La coexistence des deux modes a permis de tester l'application sur les
+machines de tous les membres de l'équipe, y compris celles équipées de
+Mac M1, sans aucune intervention manuelle particulière. Le mode autonome
+a également permis de partager l'application avec des étudiants
+extérieurs à l'équipe pour des retours rapides, ce qui aurait été
+nettement plus difficile avec une distribution classique sous forme de
+code source à compiler.
+
+% ============================================================
+\section{Conclusion}
+% ============================================================
+
+\subsection{Bilan des objectifs pédagogiques}
+Le projet STRMS valide l'ensemble des objectifs pédagogiques fixés par le
+cahier des charges. Le tableau ci-dessous synthétise la correspondance
+entre chaque concept demandé et sa mise en \oe uvre concrète.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lp{8.5cm}}
+\toprule
+\textbf{Concept} & \textbf{Mise en \oe uvre concrète dans STRMS} \\
+\midrule
+Encapsulation     & Attributs privés, listes exposées en lecture seule via \texttt{Collections.unmodifiableList}. \\
+Héritage          & \texttt{User} abstract avec trois sous-classes concrètes. \\
+Polymorphisme     & Appels à \texttt{actor.canCreateTask()} sans aucun \texttt{instanceof}. \\
+Abstraction       & Classe \texttt{User} \texttt{abstract} et interface \texttt{Reportable}. \\
+Énumérations      & Quatre enums utilisées partout au lieu de constantes brutes. \\
+Collections       & \texttt{HashMap}, \texttt{HashSet}, \texttt{PriorityQueue}, \texttt{ArrayList}. \\
+Exceptions        & Sept exceptions personnalisées, toutes \textit{checked}. \\
+File I/O          & Format \texttt{.strms} avec sauvegarde et chargement. \\
+JUnit             & Vingt-neuf tests, scénarios obligatoires couverts. \\
+UML               & Diagramme de classes et diagramme de séquence. \\
+\bottomrule
+\end{tabular}
+\caption{Bilan des concepts mis en \oe uvre.}
+\end{table}
+
+Au-delà des concepts demandés explicitement, le projet a permis d'explorer
+des thèmes transversaux importants pour la pratique professionnelle de
+l'ingénierie logicielle : la modélisation d'un graphe orienté acyclique
+appliquée à un problème métier concret, la conception d'une interface
+graphique réactive et lisible, la définition d'un format de persistance
+texte robuste, et la stratégie d'industrialisation d'un livrable.
+
+\subsection{Difficultés rencontrées et solutions}
+Trois difficultés méritent d'être mentionnées. La première est l'ordre
+non garanti lors de la sérialisation. Notre première version du
+chargement perdait silencieusement certaines dépendances car les lignes
+\texttt{DEP} pouvaient apparaître avant les \texttt{TASK} référencées
+dans le fichier. La solution adoptée consiste en un chargement en une
+seule lecture avec traitement différé des lignes \texttt{DEP} et
+\texttt{HIST}, comme expliqué dans la section consacrée à la persistance.
+Cette solution est efficace, élégante et préserve les performances.
+
+La deuxième difficulté concernait la définition stricte des transitions
+d'état avec \texttt{DONE} comme état terminal. Identifier précisément
+les transitions autorisées et celles à interdire a nécessité un travail
+de modélisation important. La solution a été centralisée dans la
+méthode \texttt{updateStatus} de la classe \texttt{Task}, qui rejette
+toute transition sortant de \texttt{DONE} par une
+\texttt{InvalidTaskStateException} explicite.
+
+La troisième difficulté est apparue lors du packaging Windows. Le
+\texttt{STRMS.exe} produit par \texttt{jpackage} étant non signé
+numériquement, il était bloqué par Smart App Control de Windows 11. La
+solution adoptée a été de produire en parallèle un launcher
+\texttt{STRMS.bat} qui invoque directement l'exécutable Java embarqué,
+contournant la vérification de signature.
+
+\subsection{Perspectives}
+Plusieurs pistes ont été identifiées pour faire évoluer le projet vers
+une solution de qualité industrielle. La première serait la migration
+du format \texttt{.strms} vers une base de données relationnelle, par
+exemple SQLite ou PostgreSQL via JDBC, ce qui apporterait une meilleure
+gestion de la concurrence et une montée en charge plus aisée. La
+deuxième consisterait à ajouter un véritable système d'authentification
+login et mot de passe avec hachage par BCrypt, à la place du sélecteur
+d'utilisateur actuel. La troisième serait l'implémentation effective des
+canaux de notification \texttt{EMAIL} et \texttt{SMS}, aujourd'hui
+simulés sur la console. La quatrième piste serait de compléter les
+tests JUnit par des tests d'interface graphique automatisés à l'aide
+d'un framework comme TestFX. Enfin, une cinquième évolution intéressante
+serait l'exposition des fonctionnalités du \texttt{TaskManager} sous
+forme d'une API REST, ce qui permettrait à plusieurs clients de
+travailler simultanément sur le même ensemble de tâches.
+
+\subsection{Conclusion finale}
+Le projet STRMS, en plus de couvrir intégralement les exigences
+pédagogiques du cahier des charges, illustre la mise en pratique
+conjointe des piliers de la programmation orientée objet et d'un
+algorithme classique de la théorie des graphes appliqué à un cas
+industriel concret. L'application est entièrement fonctionnelle, validée
+par vingt-neuf tests automatisés, distribuée sous deux formats
+complémentaires et accompagnée d'une documentation complète facilitant
+sa reprise par toute personne extérieure au projet. Le travail mené à
+cette occasion a constitué une mise en situation enrichissante,
+fidèle à ce qu'un ingénieur logiciel rencontrera dans sa pratique
+professionnelle quotidienne.
+
+\end{document}
